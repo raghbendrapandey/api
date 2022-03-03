@@ -1,0 +1,1027 @@
+openapi: 3.0.0
+info:
+  description: Service to store data quality rules and rulesets 
+  version: 1.0.1
+  title: Data Quality Management Rules Management Service
+  contact:
+    name: DELFI support
+    email: DELFI-DevPortal-Help@slb.com
+security:
+  - bearer: []
+    appkey: []
+paths:
+  /dqm/rule-management/v1/ruleset:
+    post:
+      tags:
+        - Ruleset Management
+      summary: Create ruleset
+      operationId: createRuleset
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        schema:
+          type: string
+        required: true
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        schema:
+          type: string
+        required: true
+      - name: Slb-DM-Authorization
+        in: header
+        description: Slb-DM-Authorization
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRuleSetRecord'
+      responses:
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleSetCreationResponse"
+        400:
+          description: 'Invalid parameters were given on request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        401:
+          description: User not authorized to perform the action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        404:
+          description: Requested object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+
+  /dqm/rule-management/v1/{entityKind}:
+    get:
+      tags:
+        - Ruleset Management
+      summary: Retrieve Ids for rulesets for given entity kind
+      operationId: getRuleSetByEntityKind
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: entityKind
+        in: path
+        description: entityKind
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        required: true
+        schema:
+          type: string
+      - name: Slb-DM-Authorization
+        in: header
+        description: Slb-DM-Authorization
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSetQueryResponse'           
+        400:
+          description: 'Invalid parameters were given on request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        403:
+          description: User not authorized to perform the action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        404:
+          description: Requested object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+
+  /dqm/rule-management/v2/{entityKind}:
+    get:
+      tags:
+        - Ruleset Management
+      summary: Retrieve Ids of rulesets and rules for given entity kind
+      operationId: getRuleSetsandRulesByEntityKind
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: entityKind
+        in: path
+        description: entityKind
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSetRulesQueryResponse'           
+        400:
+          description: 'Invalid parameters were given on request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        403:
+          description: User not authorized to perform the action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        404:
+          description: Requested object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+
+  /dqm/rule-management/v1/{rulesetId}/rules:
+    put:
+      tags:
+        - Ruleset Management
+      summary: Add specified rules to the ruleset
+      operationId: addRuleToRuleset
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        schema:
+          type: string
+        required: true
+      - name: Slb-DM-Authorization
+        in: header
+        description: Slb-DM-Authorization
+        schema:
+          type: string
+        required: true
+      - name: rulesetId
+        in: path
+        description: rulesetId
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RuleSetUpdateRequest'
+      responses:
+        200:
+          description: Added the specified rules to the ruleset
+        400:
+          description: 'Invalid parameters were given on request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        401:
+          description: User not authorized to perform the action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        404:
+          description: Requested object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+  
+  /dqm/rule-management/v1/{rulesetId}/rules/{ruleId}:
+    delete:
+      tags:
+        - Ruleset Management
+      summary: Delete a rule from the ruleset
+      operationId: deleteRuleFromRuleSet
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        schema:
+          type: string
+        required: true
+      - name: Slb-DM-Authorization
+        in: header
+        description: Slb-DM-Authorization
+        schema:
+          type: string
+        required: true
+      - name: rulesetId
+        in: path
+        description: rulesetId
+        schema:
+          type: string
+        required: true
+      - name: ruleId
+        in: path
+        description: ruleId
+        schema:
+          type: string
+        required: true
+      responses:
+        204:
+          description: Removed the specified rule from the ruleset
+        400:
+          description: 'Invalid parameters were given on request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        401:
+          description: User not authorized to perform the action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        404:
+          description: Requested object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+
+  /dqm/rule-management/v1/rules:
+    post:
+      tags:
+        - Rule Management
+      summary: Create rule
+      operationId: createRule
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        schema:
+          type: string
+        required: true
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        schema:
+          type: string
+        required: true
+      - name: Slb-DM-Authorization
+        in: header
+        description: Slb-DM-Authorization
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRuleRecord'
+      responses:
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleCreationResponse"
+        400:
+          description: 'Invalid parameters were given on request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        403:
+          description: User not authorized to perform the action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        404:
+          description: Requested object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+
+  /dqm/rule-management/v1/{ruleId}:
+    put:
+      tags:
+        - Rule Management
+      summary: Update a rule with given id
+      operationId: updateRuleById
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        description: ruleId
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        required: true
+        schema:
+          type: string
+      - name: Slb-DM-Authorization
+        in: header
+        description: Slb-DM-Authorization
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRuleRecord'
+      responses:
+        200:
+          description: Success
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleCreationResponse'           
+        400:
+          description: 'Invalid parameters were given on request'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        403:
+          description: User not authorized to perform the action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+        404:
+          description: Requested object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppError"
+  
+  /dqm/rule-management/v2/rules:
+    post:
+      tags:
+        - Rule Management
+      summary: Create rule
+      operationId: multipleAttrRuleCreation
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        required: true
+        schema:
+          type: string
+      - name: Slb-DM-Authorization
+        in: header
+        description: Slb-DM-Authorization
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultipleAttrRuleReq'
+      responses:
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleCreationResponse"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+  
+  /dqm/rule-management/v2/rules/nullcheck/{kind}:
+    post:
+      tags:
+        - Rule Management
+      summary: Create completeness rule with null check on all attributes
+      operationId: nullCheckRuleCreation
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: kind
+        in: path
+        description: kind for rule creation
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NullCheckRuleReq'
+      responses:
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleCreationResponse"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+  
+  /dqm/rule-management/v2/rules/referenceCheck/{kind}:
+    post:
+      tags:
+        - Rule Management
+      summary: Create rule to check if referred entities exist
+      operationId: referenceCheckRuleCreation
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: kind
+        in: path
+        description: kind for rule creation
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReferenceCheckRuleReq'
+      responses:
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleCreationResponse"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          
+  /dqm/rule-management/v2/rules/uniquenessCheck/{kind}:
+    post:
+      tags:
+        - Rule Management
+      summary: Create rule to check if records are unique
+      operationId: uniquenessCheckRuleCreation
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: kind
+        in: path
+        description: kind for rule creation
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniquenessCheckRuleReq'
+      responses:
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleCreationResponse"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+          
+  /dqm/rule-management/v2/{ruleId}:
+    put:
+      tags:
+        - Rule Management        
+      summary: Update a rule with given id
+      operationId: multipleAttrRuleUpdation
+      parameters:
+      - name: appkey
+        in: header
+        description: appkey
+        required: true
+        schema:
+          type: string
+      - name: Correlation-Id
+        in: header
+        description: Correlation-Id
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        description: ruleId
+        required: true
+        schema:
+          type: string
+      - name: Slb-Data-Partition-Id
+        in: header
+        description: Slb-Data-Partition-Id
+        required: true
+        schema:
+          type: string
+      - name: Slb-DM-Authorization
+        in: header
+        description: Slb-DM-Authorization
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultipleAttrRuleReq'
+      responses:
+        200:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleCreationResponse"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+components:
+  securitySchemes:
+    bearer:
+      type: apiKey
+      name: Authorization
+      in: header
+    appkey:
+      type: apiKey
+      name: appkey
+      in: header
+  schemas:
+    Conditions:
+      type: object
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conditions'
+        operator:
+          type: string
+        property:
+          type: string
+        value:
+          type: object
+      title: Conditions
+    
+    RuleSetUpdateRequest:
+      type: object
+      properties:
+        ruleIds:
+          type: array
+          items:
+            type: string
+            description: Id of the rule
+          example: ["sandbox-weu-des-prod-testing-e:reference-data--QualityDataRule:d4b0d0e0f9f14cf9b9b78a462458f77f"]
+      title: RuleSetUpdateRequest
+    RuleSetCreationResponse:
+      type: object
+      title: RuleSetCreationResponse
+      properties:
+        rulesetId:
+          type: string
+          example: "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRuleSet:225d46259fda47fbb6ec8de864a17535"
+    RuleSetQueryResponse:
+      type: object
+      title: RuleSetQueryResponse
+      properties:
+        rulesetIds:
+          type: array
+          items:
+            type: string
+            example: "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRuleSet:225d46259fda47fbb6ec8de864a17535"
+    RuleSetRulesQueryResponse:
+      type: object
+      title: RuleSetRulesQueryResponse
+      properties:
+        rulesets:
+          type: array
+          items: 
+            $ref: '#/components/schemas/RuleSetDetails'
+            
+    RuleSetDetails:
+      type: object
+      title: RuleSetDetails
+      properties:
+        rulesetId:
+          type: string
+          example: "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRuleSet:0145f915a16c43d8a3451991435f031d"
+        isDefault: 
+          type: boolean
+          example: true
+        rulesetName:
+          type: string
+          example: "Default ruleset for slb:NZ:wellbore:1.0.0"
+        ruleIds:
+          type: array
+          items:
+            type: string
+          example:
+            ["sandbox-weu-des-prod-testing-e:reference-data--QualityDataRule:a9d49a6abe164f8ab63fb24898270be9",
+            "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRule:ef5b623857aa46d5a7bd832169514b74",
+            "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRule:266c9f1c1fe34f90a59cfc1c4990be1a",
+            "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRule:73934238ab974a7d959207991b555611"]
+    Legal:
+      type: object
+      properties:
+        legaltags:
+          type: array
+          description: List of legaltag names associated with the record. When
+            'ancestry.parents' are provided, this field is not mandatory.
+          uniqueItems: true
+          items:
+            type: string
+            example: sandbox-weu-des-prod-testing-e-default
+        otherRelevantDataCountries:
+          type: array
+          description: List of other relevant data countries. Must contain the ISO 3166
+            Alpha-2 code of the country where the data was ingested from. When
+            'ancestry.parents' are provided, this field is not mandatory.
+          uniqueItems: true
+          items:
+            type: string
+            example: US
+
+    CreateRuleSetRecord:
+      description: RuleSet record creation.
+      type: object
+      required:
+        - legal
+        - data
+        - kind
+      properties:
+        legal:
+          $ref: "#/components/schemas/Legal"
+        kind:
+          type: string
+          example: "sandbox-weu-des-prod-testing-e:dqmtest:reference-data--QualityDataRuleSet:1.0.0"
+        data:
+          type: object
+          description: Record payload represented as a list of key-value pairs.
+          properties:
+            Name:
+              type: string
+              example: "RuleSet name"
+            Description:
+              type: string
+              example: "RuleSet description"
+            DataRules:
+              type: array
+              description: IDs of the rules in the ruleset
+              items:
+                type: string
+              example: [
+                "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRule:d4b0d0e0f9f14cf9b9b78a462458f77f",
+                "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRule:e0f9f14cd4b0d0f462458f77f9b9b78a"]
+            EvaluatedEntityKind:
+              type: string
+              example: sandbox-weu-des-prod-testing-e:wks:Wellbore:1.0.0"
+            Classification:
+              type: string
+              example: "Wellbore quality Rule Set"
+  
+    CreateRuleRecord:
+      description: Rule record.
+      type: object
+      required:
+        - legal
+        - data
+        - kind
+      properties:
+        legal:
+          $ref: "#/components/schemas/Legal"
+        kind:
+          type: string
+          example: "slb-osdu-qual-des-prod-testing:dqmtest:reference-data--QualityDataRule:1.0.0"
+        data:
+          type: object
+          description: Record payload represented as a list of key-value pairs.
+          properties:
+            Name:
+              type: string
+              example: "Rule Name"
+            Description:
+              type: string
+              example: "Rule description"
+            Category:
+              type: string
+              example: "completeness"
+            IsActive:
+              type: boolean
+              example: true
+            IsInternal:
+              type: boolean
+              example: true
+            IsDefault:
+              type: boolean
+              example: false
+            Property:
+              type: string
+              example: "Well Name"
+            PropertyType:
+              type: string
+              example: "string"
+    
+    MultipleAttrRuleBody:
+      type: object
+      title: MultipleAttrRuleBody
+      required:
+        - category
+        - condition
+        - isActive
+        - isDefault
+        - isInternal
+      properties:
+        category:
+          type: string
+        condition:
+          type: string
+        description:
+          type: string
+        isActive:
+          type: boolean
+        isDefault:
+          type: boolean
+        isInternal:
+          type: boolean
+        ruleName:
+          type: string
+        properties:
+          $ref: '#/components/schemas/properties'
+        entityKind:  
+          type: string
+        naturalKeyAttributes:
+          type: array
+          items:
+            type: string
+    
+    properties:
+      type: array
+      items: 
+        type: object
+        properties:
+          name:
+            type: string         
+            example: "VerticalMeasurements.VerticalMeasurementID"
+          type:
+            type: string
+            description: data type of the property
+            items:
+              type: string
+              example: "string"
+        
+    NullCheckRuleBody:
+      type: object
+      title: NullCheckRuleBody
+      required:
+        - ruleName
+      properties:
+        description:
+          type: string
+        isActive:
+          type: boolean
+          default: true
+        isDefault:
+          type: boolean
+          default: false
+        isInternal:
+          type: boolean
+          default: false
+        ruleName:
+          type: string
+    
+    ReferenceCheckRuleBody:
+      type: object
+      title: ReferenceCheckRuleBody
+      required:
+        - ruleName
+      properties:
+        description:
+          type: string
+          default: "Reference Check rule"
+        isActive:
+          type: boolean
+          default: true
+        isDefault:
+          type: boolean
+          default: false
+        isInternal:
+          type: boolean
+          default: false
+        ruleName:
+          type: string
+        condition:
+          type: string
+    
+    UniquenessCheckRuleBody:
+      type: object
+      title: UniquenessCheckRuleBody
+      required:
+        - ruleName
+      properties:
+        description:
+          type: string
+          default: "Uniqueness Check rule"
+        isActive:
+          type: boolean
+          default: true
+        isDefault:
+          type: boolean
+          default: false
+        isInternal:
+          type: boolean
+          default: false
+        ruleName:
+          type: string
+        condition:
+          type: string
+        naturalKeyAttributes:
+          type: array
+          items:
+            type: string
+      
+    MultipleAttrRuleReq:
+      type: object
+      title: MultipleAttrRuleReq
+      properties:
+        data:
+          $ref: '#/components/schemas/MultipleAttrRuleBody'
+        kind:
+          type: string
+        legal:
+          $ref: '#/components/schemas/Legal'
+    
+    NullCheckRuleReq:
+      type: object
+      title: NullCheckRuleReq
+      properties:
+        data:
+          $ref: '#/components/schemas/NullCheckRuleBody'
+        kind:
+          type: string
+        legal:
+          $ref: '#/components/schemas/Legal'
+    
+    ReferenceCheckRuleReq:
+      type: object
+      title: ReferenceCheckRuleReq
+      properties:
+        data:
+          $ref: '#/components/schemas/ReferenceCheckRuleBody'
+        kind:
+          type: string
+        legal:
+          $ref: '#/components/schemas/Legal'
+    
+    UniquenessCheckRuleReq:
+      type: object
+      title: UniquenessCheckRuleReq
+      properties:
+        data:
+          $ref: '#/components/schemas/UniquenessCheckRuleBody'
+        kind:
+          type: string
+        legal:
+          $ref: '#/components/schemas/Legal'
+    
+    RuleCreationResponse:
+      type: object
+      title: RuleCreationResponse
+      properties:
+        ruleId:
+          type: string
+          example: "sandbox-weu-des-prod-testing-e:reference-data--QualityDataRule:d4b0d0e0f9f14cf9b9b78a462458f77f"
+    
+    AppError:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  domain:
+                    type: string
+                  reason:
+                    type: string
+                  message:
+                    type: string
